@@ -1,0 +1,73 @@
+version: "3.7"
+
+networks:
+  main:
+    ipam:
+      config:
+        - subnet: "192.168.5.0/24"
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: server
+    hostname: server
+    volumes:
+      - .:/app
+    networks:
+      main:
+        ipv4_address: "192.168.5.10"
+    environment:
+      - FILE=server.Server
+  
+  client1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: client1
+    hostname: client1
+    volumes:
+      - .:/app
+    networks:
+      main:
+        ipv4_address: "192.168.5.11"
+    environment:
+      - DISPLAY=host.docker.internal:0
+      - FILE=client.Client
+    depends_on:
+      - server
+
+  client2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: client2
+    hostname: client2
+    volumes:
+      - .:/app
+    networks:
+      main:
+        ipv4_address: "192.168.5.12"
+    environment:
+      - DISPLAY=host.docker.internal:0
+      - FILE=client.Client
+    depends_on:
+      - server
+
+  client3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: client3
+    hostname: client3
+    volumes:
+      - .:/app
+    networks:
+      main:
+        ipv4_address: "192.168.5.13"
+    environment:
+      - DISPLAY=host.docker.internal:0
+      - FILE=client.Client
+    depends_on:
+      - server
